@@ -1,4 +1,4 @@
-__author__ = 'Billy Tobon'
+__author__ = 'Billy Tobon (Updated by Peerasak Unsakon)'
 
 import os
 import re
@@ -31,7 +31,7 @@ for dirname, dirnames, filenames in os.walk(path):
             if not '@2x' in clean_name:
                 assets_list.append(clean_name)
 
-        if filename.endswith(".m") or filename.endswith(".plist") or filename.endswith(".xib"):
+        if filename.endswith(".m") or filename.endswith(".plist") or filename.endswith(".xib") or filename.endswith(".storyboard"):
             path_to_file = os.path.join(dirname, filename)
             source_list.append(path_to_file)
 
@@ -69,7 +69,11 @@ for image in assets_list:
     if not is_used:
         unused.append(image)
 
-print '%d unused images found' % len(unused)
-
+print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '
+print 'scanning completed'
+print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '
 for image in unused:
     print '* %s' % image
+print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '
+print '%d unused images found' % len(unused)
+print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '    
