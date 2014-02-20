@@ -7,6 +7,7 @@ just run the python script wit the project as parameter:
 ```
 python xcoba.py 'path_to_project'
 ```
+and you will get `xcobaReport.html` in same directory  
 
 For dynamic resource naming, the script will look for strings replacing the image number for `'%d'`.
 
@@ -19,9 +20,7 @@ filenames and if not found the script will try to find a reference to `'button_%
 
 - Allow passing excluded folders.
 - Better output list.
-- Allow output to a file.
 - Create it as an xcode plugin.
-
 
 ###why xCoba?
 Because xCoba sounds like broom in spanish 'Escoba', then you got it, right?

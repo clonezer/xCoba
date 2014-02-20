@@ -4,7 +4,6 @@ import os
 import re
 import argparse
 
-
 parser = argparse.ArgumentParser(description='Find unused images on an xcode project.')
 parser.add_argument('path', help='Project path')
 args = parser.parse_args()
@@ -12,10 +11,8 @@ args = parser.parse_args()
 path = args.path
 _digits = re.compile('\d')
 
-
 def contains_digits(d):
     return bool(_digits.search(d))
-
 
 assets_list = []
 source_list = []
@@ -29,7 +26,7 @@ for dirname, dirnames, filenames in os.walk(path):
             path_to_file = os.path.join(dirname, filename)
             clean_name = filename.split('.')[0]
             if not '@2x' in clean_name:
-                assets_list.append(clean_name)
+                assets_list.append({'clean_name': clean_name, 'path_to_file': path_to_file})
 
         if filename.endswith(".m") or filename.endswith(".plist") or filename.endswith(".xib") or filename.endswith(".storyboard"):
             path_to_file = os.path.join(dirname, filename)
@@ -46,13 +43,14 @@ for dirname, dirnames, filenames in os.walk(path):
 
 for image in assets_list:
     is_used = False
-    objcImage = '@"' + image
+    objcImage = image['clean_name']
+    
 
     for source_file in source_list:
         f = open(source_file)
         content = f.read()
         f.close()
-        image_to_search = objcImage if source_file.endswith('.m') else image
+        image_to_search = objcImage if source_file.endswith('.m') else image['clean_name']
 
         if not content.find(image_to_search) == -1:
             is_used = True
@@ -73,7 +71,19 @@ print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '
 print 'scanning completed'
 print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '
 for image in unused:
-    print '* %s' % image
+    print '* %s' % image['clean_name']
 print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '
 print '%d unused images found' % len(unused)
 print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '    
+
+
+# Generate OutputHtml
+html_str = '<table border=1><tr><th>NO.</th><th>Image Name</th><th>File Path</th><th>Preview</th></tr><indent>'
+i = 1;
+for image in unused:
+    html_str += '<tr><td> %d </td><td> %s </td><td> %s </td><td> <img src=\"%s\"> </td></tr>' %(i, image['clean_name'], image['path_to_file'], image['path_to_file'])
+    i += 1
+html_str += '</indent></table>'
+Html_file= open("xcobaReport.html","w")
+Html_file.write(html_str)
+Html_file.close()
