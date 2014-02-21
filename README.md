@@ -16,9 +16,11 @@ filenames and if not found the script will try to find a reference to `'button_%
 
 **Retina display images are also searched if the non-retina display image exist.**
 
+### Sample Image
+
+
 ### Todo :
 
-- Allow passing excluded folders.
 - Create it as an xcode plugin.
 
 ### why xCoba?
