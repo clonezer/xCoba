@@ -1,5 +1,8 @@
 # List all unused files from you xcode project
 
+### why xCoba?
+Because xCoba sounds like broom in spanish 'Escoba', then you got it, right?
+
 ### How to use:
 
 just run the python script wit the project as parameter:
@@ -18,10 +21,6 @@ filenames and if not found the script will try to find a reference to `'button_%
 
 ### Sample Image
 
+![Run](https://raw.github.com/clonezer/xCoba/master/sample1.png)
 
-### Todo :
-
-- Create it as an xcode plugin.
-
-### why xCoba?
-Because xCoba sounds like broom in spanish 'Escoba', then you got it, right?
+![Report in web browser](https://raw.github.com/clonezer/xCoba/master/sample2.png)
