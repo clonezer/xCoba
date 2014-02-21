@@ -1,4 +1,4 @@
-# List all unused files from you xcode project
+# List all unused images from you xcode project
 
 ### why xCoba?
 Because xCoba sounds like broom in spanish 'Escoba', then you got it, right?
@@ -19,7 +19,7 @@ filenames and if not found the script will try to find a reference to `'button_%
 
 **Retina display images are also searched if the non-retina display image exist.**
 
-### Sample Image
+### Sample Image:
 
 ![Run](https://raw.github.com/clonezer/xCoba/master/sample1.png)
 
