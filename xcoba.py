@@ -3,6 +3,7 @@ __author__ = 'Billy Tobon (Updated by Peerasak Unsakon)'
 import os
 import re
 import argparse
+import webbrowser
 
 parser = argparse.ArgumentParser(description='Find unused images on an xcode project.')
 parser.add_argument('path', help='Project path')
@@ -77,13 +78,17 @@ print '%d unused images found' % len(unused)
 print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '    
 
 
-# Generate OutputHtml
-html_str = '<table border=1><tr><th>NO.</th><th>Image Name</th><th>File Path</th><th>Preview</th></tr><indent>'
+# Generate report file
+html_str = '<style type=\"text/css\">.tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc;}.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#fff;}.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#f0f0f0;}.tg .tg-s6z2{text-align:center}</style><center><h2>xCobaReport (%d unused images found)</h2><table class=\"tg\"><tr><th class=\"tg-031e\">NO</th><th class=\"tg-031e\">Image Name</th><th class=\"tg-031e\">Preview</th></tr><indent>' % len(unused)
 i = 1;
 for image in unused:
-    html_str += '<tr><td> %d </td><td> %s </td><td> %s </td><td> <img src=\"%s\"> </td></tr>' %(i, image['clean_name'], image['path_to_file'], image['path_to_file'])
+    html_str += '<tr><td class=\"tg-s6z2\"> %d </td><td class=\"tg-031e\"> %s </td><td class=\"tg-s6z2\"> <img src=\"%s\"> </td></tr>' %(i, image['clean_name'], image['path_to_file'])
     i += 1
-html_str += '</indent></table>'
-Html_file= open("xcobaReport.html","w")
+html_str += '</indent></table></center>'
+Html_file= open("xCobaReport.html","w")
 Html_file.write(html_str)
 Html_file.close()
+
+report_url = 'file://' + os.path.dirname(os.path.realpath(__file__)) + '/xCobaReport.html'
+# Open report file in web browser
+webbrowser.open_new_tab(report_url)
