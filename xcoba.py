@@ -126,7 +126,12 @@ html_str += '}'
 html_str += '.tg .tg-s6z2 {'
 html_str += '    text-align:center'
 html_str += '}'
+html_str += '.tg img {'
+html_str += '    width: 100px;'
+html_str += '    height: auto;'
+html_str += '}'
 html_str += '</style>'
+
 html_str += '<center>'
 html_str += '    <h2>xCobaReport (%d unused images found : total size %s )</h2>' % (len(unused), total_size(unused))
 html_str += '    <table class=\"tg\">'
