@@ -15,6 +15,7 @@ _digits = re.compile('\d')
 def contains_digits(d):
     return bool(_digits.search(d))
 
+# File size conversion by Sridhar Ratnakumar from http://goo.gl/nbAhU
 def sizeof_fmt(num):
     for x in ['bytes','KB','MB','GB']:
         if num < 1024.0 and num > -1024.0:
@@ -65,13 +66,8 @@ for image in assets_list:
         f.close()
         image_to_search = objcImage if source_file.endswith('.m') else image['clean_name']
 
-        
-
         if not content.find(image_to_search) == -1:
             is_used = True
-            if objcImage in ['Finance open Edit']:
-                print "This File"  
-                print source_file
             break
 
         if contains_digits(image_to_search):
@@ -95,16 +91,73 @@ print '%d unused images found' % len(unused)
 print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '    
 
 # Generate report file
-html_str = '<style type=\"text/css\">.tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc;}.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#fff;}.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#f0f0f0;}.tg .tg-s6z2{text-align:center}</style><center><h2>xCobaReport (%d unused images found : total size %s )</h2><table class=\"tg\"><tr><th class=\"tg-031e\">NO</th><th class=\"tg-031e\">Image Name</th><th class=\"tg-031e\">File Size</th><th class=\"tg-031e\">Preview</th></tr><indent>' % (len(unused), total_size(unused))
+html_str = ''
+html_str += '<style type=\"text/css\">'
+html_str += '.tg {'
+html_str += '    border-collapse:collapse;'
+html_str += '    border-spacing:0;'
+html_str += '    border-color:#ccc;'
+html_str += '}'
+html_str += '.tg td {'
+html_str += '    font-family:Arial, sans-serif;'
+html_str += '    font-size:14px;'
+html_str += '    padding:10px 5px;'
+html_str += '    border-style:solid;'
+html_str += '    border-width:1px;'
+html_str += '    overflow:hidden;'
+html_str += '    word-break:normal;'
+html_str += '    border-color:#ccc;'
+html_str += '    color:#333;'
+html_str += '    background-color:#fff;'
+html_str += '}'
+html_str += '.tg th {'
+html_str += '    font-family:Arial, sans-serif;'
+html_str += '    font-size:14px;'
+html_str += '    font-weight:normal;'
+html_str += '    padding:10px 5px;'
+html_str += '    border-style:solid;'
+html_str += '    border-width:1px;'
+html_str += '    overflow:hidden;'
+html_str += '    word-break:normal;'
+html_str += '    border-color:#ccc;'
+html_str += '    color:#333;'
+html_str += '    background-color:#f0f0f0;'
+html_str += '}'
+html_str += '.tg .tg-s6z2 {'
+html_str += '    text-align:center'
+html_str += '}'
+html_str += '</style>'
+html_str += '<center>'
+html_str += '    <h2>xCobaReport (%d unused images found : total size %s )</h2>' % (len(unused), total_size(unused))
+html_str += '    <table class=\"tg\">'
+html_str += '        <tr>'
+html_str += '            <th class=\"tg-031e\">NO</th>'
+html_str += '            <th class=\"tg-031e\">Image Name</th>'
+html_str += '            <th class=\"tg-031e\">File Size</th>'
+html_str += '            <th class=\"tg-031e\">Preview</th>'
+html_str += '        </tr>'
+html_str += '        <indent>'
+
 i = 1;
 for image in unused:
-    html_str += '<tr><td class=\"tg-s6z2\"> %d </td><td class=\"tg-031e\"> %s </td><td class=\"tg-031e\"> %s </td><td class=\"tg-s6z2\"> <img src=\"%s\"> </td></tr>' %(i, image['clean_name'], sizeof_fmt(image['file_size']), image['path_to_file'])
+    html_str += '<tr>'
+    html_str += '    <td class=\"tg-s6z2\">%d</td>' % i
+    html_str += '    <td class=\"tg-031e\">%s</td>' % image['clean_name']
+    html_str += '    <td class=\"tg-031e\">%s</td>' % sizeof_fmt(image['file_size'])
+    html_str += '    <td class=\"tg-s6z2\">'
+    html_str += '        <img src=\"%s\">' % image['path_to_file']
+    html_str += '    </td>'
+    html_str += '</tr>'
     i += 1
-html_str += '</indent></table></center>'
+
+html_str += '        </indent>'
+html_str += '    </table>'
+html_str += '</center>'
+
 Html_file= open("xCobaReport.html","w")
 Html_file.write(html_str)
 Html_file.close()
 
-report_url = 'file://' + os.path.dirname(os.path.realpath(__file__)) + '/xCobaReport.html'
 # Open report file in web browser
+report_url = 'file://' + os.path.dirname(os.path.realpath(__file__)) + '/xCobaReport.html'
 webbrowser.open_new_tab(report_url)
