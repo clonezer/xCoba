@@ -30,8 +30,10 @@ def total_size(file_list):
     return sizeof_fmt(total)
 
 assets_list = []
+retina_assets_list = []
 source_list = []
 unused = []
+unretina = []
 
 for dirname, dirnames, filenames in os.walk(path):
 
@@ -42,6 +44,8 @@ for dirname, dirnames, filenames in os.walk(path):
             clean_name = filename.split('.')[0]
             if not '@2x' in clean_name:
                 assets_list.append({'clean_name': clean_name, 'path_to_file': path_to_file, 'file_size': os.path.getsize(path_to_file)})
+            else:
+                retina_assets_list.append({'clean_name': clean_name, 'path_to_file': path_to_file, 'file_size': os.path.getsize(path_to_file)})
 
         if filename.endswith(".m") or filename.endswith(".plist") or filename.endswith(".xib") or filename.endswith(".storyboard"):
             path_to_file = os.path.join(dirname, filename)
@@ -81,13 +85,34 @@ for image in assets_list:
     if not is_used:
         unused.append(image)
 
+for image in assets_list:
+    is_retina = False
+    objcImage = image['clean_name']
+
+    for retina_image in retina_assets_list:
+        retinaImage = retina_image['clean_name']
+        if objcImage in retinaImage:
+            is_retina = True
+            break
+
+    if not is_retina:
+        unretina.append(image)
+
 print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '
-print 'scanning completed'
+print 'Unused Image'
 print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '
 for image in unused:
     print '* %s - filesize: %s' % (image['clean_name'], sizeof_fmt(image['file_size']))
 print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '
 print '%d unused images found' % len(unused)
+print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '    
+print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '
+print 'Unretina Image'
+print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '
+for image in unretina:
+    print '* %s' % (image['clean_name'])
+print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '
+print '%d unretina images found' % len(unretina)
 print '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '    
 
 # Generate report file
@@ -133,7 +158,10 @@ html_str += '}'
 html_str += '</style>'
 
 html_str += '<center>'
-html_str += '    <h2>xCobaReport (%d unused images found : total size %s )</h2>' % (len(unused), total_size(unused))
+html_str += '    <h2>xCoba report (%d unused images found : total size %s )</h2>' % (len(unused), total_size(unused))
+
+# Unused Image Table
+
 html_str += '    <table class=\"tg\">'
 html_str += '        <tr>'
 html_str += '            <th class=\"tg-031e\">NO</th>'
@@ -157,6 +185,34 @@ for image in unused:
 
 html_str += '        </indent>'
 html_str += '    </table>'
+
+html_str += '    <h2>xCoba report (%d unretina images found)</h2>' % len(unretina)
+# Unretina Image Table
+
+html_str += '    <table class=\"tg\">'
+html_str += '        <tr>'
+html_str += '            <th class=\"tg-031e\">NO</th>'
+html_str += '            <th class=\"tg-031e\">Image Name</th>'
+html_str += '            <th class=\"tg-031e\">File Size</th>'
+html_str += '            <th class=\"tg-031e\">Preview</th>'
+html_str += '        </tr>'
+html_str += '        <indent>'
+
+i = 1;
+for image in unretina:
+    html_str += '<tr>'
+    html_str += '    <td class=\"tg-s6z2\">%d</td>' % i
+    html_str += '    <td class=\"tg-031e\">%s</td>' % image['clean_name']
+    html_str += '    <td class=\"tg-031e\">%s</td>' % sizeof_fmt(image['file_size'])
+    html_str += '    <td class=\"tg-s6z2\">'
+    html_str += '        <img src=\"%s\">' % image['path_to_file']
+    html_str += '    </td>'
+    html_str += '</tr>'
+    i += 1
+
+html_str += '        </indent>'
+html_str += '    </table>'
+
 html_str += '</center>'
 
 Html_file= open("xCobaReport.html","w")
