@@ -5,7 +5,7 @@ Because xCoba sounds like broom in spanish 'Escoba', then you got it, right?
 
 ### How to use:
 
-just run the python script wit the project as parameter:
+just run the python script with path to project folder as parameter in Terminal:
 
 ```
 python xcoba.py 'path_to_project'
